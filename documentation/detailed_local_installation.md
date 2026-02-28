@@ -2,14 +2,14 @@
 
 ##### Prerequisite
 
-Make sure you have Android Studio and SDK installed on your machine. For users who haven't installed these prerequisites, you can check https://github.com/AppForge-Bench/AppForge/blob/main/documentation/local_emulator.md. However, if you don't have them installed on your machine before and are able to use Ubuntu system with CPU virtualization, we strongly recommend you to use docker environment. 
+Make sure you have Android Studio and SDK installed on your machine. For users who haven't installed these prerequisites, you can check https://github.com/TongmingLAIC/AppForge/blob/main/documentation/local_emulator.md. However, if you don't have them installed on your machine before and are able to use Ubuntu system with CPU virtualization, we strongly recommend you to use docker environment. 
 
 ##### Download Evaluation Files
 
 Download evaluation repo and install dependencies.
 
 ```
-git pull https://github.com/TongmingLAIC/AppForge_Bench
+git clone https://github.com/TongmingLAIC/AppForge_Bench
 cd AppForge_Bench
 pip install -r requirements.txt
 

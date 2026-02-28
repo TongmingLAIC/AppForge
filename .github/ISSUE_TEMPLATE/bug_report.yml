@@ -1,0 +1,54 @@
+name: Bug report
+description: Report a reproducible bug in AppForge
+title: "[Bug]: "
+labels:
+  - bug
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting a bug. Please provide enough detail so we can reproduce it quickly.
+  - type: input
+    id: env
+    attributes:
+      label: Environment
+      description: OS, Python version, and whether you use Docker or local emulator.
+      placeholder: macOS 14, Python 3.11, Docker
+    validations:
+      required: true
+  - type: input
+    id: command
+    attributes:
+      label: Command used
+      description: Paste the full command that triggered the issue.
+      placeholder: python examples/test.py --use_docker ...
+    validations:
+      required: true
+  - type: input
+    id: task
+    attributes:
+      label: Task ID(s)
+      description: Which task IDs are affected?
+      placeholder: 63
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+      placeholder: What should have happened?
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+      placeholder: What happened instead?
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Relevant logs
+      description: Include snippets from runs/<run_name>/ compile/test/fuzz logs.
+      render: shell
+    validations:
+      required: true

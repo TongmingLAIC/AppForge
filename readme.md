@@ -30,6 +30,7 @@ This is why AppForge matters: it measures real-world software delivery ability, 
 In short: AppForge is designed to measure what actually matters in software creation, not leaderboard-friendly shortcuts.
 
 It provides:
+
 - 101 real app tasks with structured feature specs.
 - A template-based compile pipeline for reproducible builds.
 - Test + fuzz based evaluation for quality and robustness.
@@ -55,12 +56,16 @@ AppForge is built to answer this question with measurable outcomes.
 
 ## 5-Minute Quick Start (Docker, recommended)
 
+### 0)  Prerequisite
+
+Our docker image contains Android docker image from [budtmo/docker-android: Android in docker solution with noVNC supported and video recording](https://github.com/budtmo/docker-android). In short, our docker image can only be run under **Ubuntu OS** supporting **CPU Virtualization**. If you are using other systems, you can check `documentation/detailed_docker_installation.md` or use alternative Local Emulator Setup.
+
 ### 1) Install package
 
 ```bash
 git clone https://github.com/TongmingLAIC/AppForge
 cd AppForge
-pip install -e .[example]
+pip install -e '.[example]'
 ```
 
 ### 2) Pull runtime image
@@ -69,13 +74,13 @@ pip install -e .[example]
 docker pull zenithfocuslight/appforge:latest
 ```
 
-### 3) Run one task immediately (no API key required)
+### 3) Checking environment installation immediately (no API key required)
 
 ```bash
-python examples/quickstart.py --use_docker --task_id 63
+python examples/quickstart.py --use_docker
 ```
 
-This command runs the benchmark with the `naive` baseline on one task and prints aggregated metrics.
+This command runs with the `naive` baseline on one task and quickly checks the environment installation.
 
 ---
 
@@ -83,17 +88,25 @@ This command runs the benchmark with the `naive` baseline on one task and prints
 
 ```bash
 python examples/test.py --use_docker --docker_port=6080 \
-    --model=qwen3coder --runs=example_qwen3 \
+    --model=<model_name> --runs=example_<model_name> \
     --api_key_path=<api_key_path> --start_id 63 --end_id 63 \
-    --self_fix_attempts 1
+    --self_fix_attempts 0
 ```
 
-Common model options in `examples/test.py`:
+Common `<model_name>` options in `examples/test.py`:
+
 - `qwen3coder`
 - `deepseekv3`
 - `deepseekr1`
-- `claude_code`
-- `naive`
+- `claude_code (access through CLI)` 
+- `naive (which returns empty output for checking environment installation)`
+- and more to be added!
+
+`--start_id` and `--end_id`specify the range of tasks to test. To run tests on all tasks, set `--start_id 0 --end_id 100`.
+
+`--self_fix_atttempts` determines how many times the model will attempt to fix code based on compilation error feedback.
+
+You can always check https://appforge-bench.github.io/code-docs/modules.html and `documentation/detailed_docker_installation.md` for more information.
 
 ---
 
@@ -101,24 +114,14 @@ Common model options in `examples/test.py`:
 
 If you prefer local Android emulator/device testing, see:
 
-- `documentation/local_emulator.md`
-
-Then run:
-
-```bash
-python examples/test.py \
-    --emulator_id <emulator_id> \
-    --bench_folder <path_to_AppForge_Bench> \
-    --sdk_path <path_to_android_sdk> \
-    --model=qwen3coder --runs=local_example \
-    --api_key_path=<api_key_path> --start_id 63 --end_id 63
-```
+- `documentation/detailed_local_installation.md`
 
 ---
 
 ## Results and Artifacts
 
 By default outputs are saved under `runs/<run_name>/`, including:
+
 - raw model output
 - compile logs
 - test/fuzz logs

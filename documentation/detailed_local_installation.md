@@ -8,9 +8,12 @@ Make sure you have Android Studio and SDK installed on your machine. For users w
 
 Download evaluation repo and install dependencies.
 
-```
+```bash
 git clone https://github.com/TongmingLAIC/AppForge_Bench
 cd AppForge_Bench
+
+conda create -n appforge python=3.10
+conda activate appforge
 pip install -r requirements.txt
 
 python -m uiautomator2 init
@@ -19,7 +22,7 @@ python -m uiautomator2 init
 ### 🚀 Environment Setup
 Then download then repo and install our module **AppForge**:
 
-```python
+```bash
 git clone https://github.com/TongmingLAIC/AppForge
 
 cd AppForge
@@ -31,7 +34,7 @@ pip install -e .[example]
 
 
 #### 🔰 Quick Start with Local Emulator
-We can run following code with **local emulator**s:
+Keep the emulator open, we can run following code with **local emulator**s:
 
 ```
 python examples/test.py --emulator_id <emulator_id> --bench_folder <position_where_you_pull_the_AppBench_forge> --sdk_path <sdk_path> \

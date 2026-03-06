@@ -65,7 +65,10 @@ Our docker image contains Android docker image from [budtmo/docker-android: Andr
 ```bash
 git clone https://github.com/TongmingLAIC/AppForge
 cd AppForge
-pip install -e '.[example]'
+
+conda create -n appforge python=3.10
+conda activate appforge
+pip install -e .\[example]
 ```
 
 ### 2) Pull runtime image

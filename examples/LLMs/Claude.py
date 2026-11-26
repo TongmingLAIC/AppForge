@@ -6,8 +6,13 @@ import os
 class claude(llm_base):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        with open("anthropic_api.key") as f:
-            self.api_key = f.read().strip()
+        api_key = kwargs.get("api_key", None)
+        if api_key is None:
+            api_key_path = kwargs.get("api_key_path", "anthropic_api.key")
+            with open(api_key_path) as f:
+                self.api_key = f.read().strip()
+        else:
+            self.api_key = api_key
         self.http_proxy = None
         self.https_proxy = None
         if 'http_proxy' in kwargs and 'https_proxy' in kwargs:
@@ -22,6 +27,7 @@ class claude(llm_base):
             del os.environ['https_proxy']
         assert "model" in kwargs, "model should be either claude-3-haiku-20240307, claude-3-sonnet-20240229, or claude-3-opus-20240229"
         self.model = kwargs['model']
+        self.max_tokens = kwargs.get("max_tokens", 4096)
 
     def __call__(self, prompt: List[Dict[str, str]]) -> Dict[str, Union[str, int, Any]]:
         assert len(prompt) > 0, "prompt should not be empty"
@@ -45,13 +51,13 @@ class claude(llm_base):
                 model=self.model,
                 system=system_message,
                 messages=new_prompt,
-                max_tokens=1024
+                max_tokens=self.max_tokens
             )
         else:
             raw_response = self.client.messages.create(
                 model=self.model,
                 messages=new_prompt,
-                max_tokens=1024
+                max_tokens=self.max_tokens
             )
         if self.http_proxy is not None and self.https_proxy is not None:
             os.environ['http_proxy'] = self.http_proxy

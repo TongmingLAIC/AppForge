@@ -89,14 +89,19 @@ class AppForge:
                     privileged=True,
                 )   
             print('AppForge: Waiting emulator on docker to get online...')
-            while True:
-                print('AppForge: This might take a while (2-3min)...')
+            max_wait = 300  # 5 minutes
+            elapsed = 0
+            while elapsed < max_wait:
                 try:
                     self.ensure_emulator()
                     print('AppForge: Emulator confirmed...')
                     break
-                except:
-                    time.sleep(10)    
+                except Exception:
+                    print('AppForge: This might take a while (2-3min)...')
+                    time.sleep(10)
+                    elapsed += 10
+            else:
+                raise RuntimeError("Emulator failed to come online after 5 minutes")
         else:
             assert sdk_path and bench_folder, 'Android SDK and Benchmark folder not provided!'
             self.sdk_path = sdk_path
@@ -130,7 +135,7 @@ class AppForge:
                 - device: Target device name
                 
         """
-        assert task_id>=0 and task_id<=self.task_num, \
+        assert task_id>=0 and task_id<self.task_num, \
             f'Task ID ranges from 0~{self.task_num-1}.'
             
         return {
@@ -415,5 +420,8 @@ class AppForge:
             for i in range(self.task_num):
                 all_results[i] = {**self.test(i), **self.fuzz(i)}
         ans = sumup_json(all_results)
-        ans['crash_rate'] = 1 - ans['no_crash'] / ans['compile']
+        if ans['compile'] > 0:
+            ans['crash_rate'] = 1 - ans['no_crash'] / ans['compile']
+        else:
+            ans['crash_rate'] = float('nan')
         return ans

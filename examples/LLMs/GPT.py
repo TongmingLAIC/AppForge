@@ -36,7 +36,7 @@ class gpt4o(gpt):
 class gpt4v(gpt):
 
     def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs, model="gpt-4-turbo")
+        super().__init__(*args, **kwargs, model="gpt-4o")
 
 class gpt4omini(gpt):
 

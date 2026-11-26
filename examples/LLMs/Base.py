@@ -204,15 +204,11 @@ class OpenAIFormatLLM(llm_base):
         openai.api_base = self.api_base
         openai.api_key_path = None
 
-        os.environ['http_proxy'] = "http://127.0.0.1:7890"
-        os.environ['https_proxy'] = "http://127.0.0.1:7890"
         raw_response = chat_completion_with_backoff(
             model=self.model,
             messages=prompt,
             temperature=self.temperature
         )
-        del os.environ['http_proxy']
-        del os.environ['https_proxy']
 
         ret = dict()
         ret["raw_response"] = raw_response
@@ -242,18 +238,12 @@ class OpenAIFormatLLM(llm_base):
             temperature=self.temperature,
         )
         else :
-            os.environ['http_proxy'] = "http://127.0.0.1:1230"
-            os.environ['https_proxy'] = "http://127.0.0.1:1230"
-
             raw_response = openai.ChatCompletion.create(
                 model=self.model,
                 messages=prompt,
                 temperature=self.temperature,
                 reasoning=self.reasoning
             )
-            
-            del os.environ['http_proxy']
-            del os.environ['https_proxy']
 
 
         ret = dict()
@@ -264,8 +254,8 @@ class OpenAIFormatLLM(llm_base):
                 "output": raw_response.usage.completion_tokens,
                 "total": raw_response.usage.total_tokens
             }
-        except:
-            0
+        except Exception:
+            ret["token_usage"] = {"input": 0, "output": 0, "total": 0}
         ret["parsed_output"] = raw_response.choices[0].message.content
         return ret
 
